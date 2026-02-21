@@ -52,18 +52,22 @@ function IdeaCard({ idea, onClick }) {
 
         setIsDownloading(true);
         try {
+            const filterExport = (node) => !node.classList?.contains('hide-on-export');
             const dataUrl = await htmlToImage.toPng(cardRef.current, {
                 quality: 1.0,
                 pixelRatio: 2, // High resolution for mobile
-                style: { transform: 'scale(1)', margin: 0 } // Ensure it captures correctly without hover scale
+                style: { transform: 'scale(1)', margin: 0 }, // Ensure it captures correctly without hover scale
+                filter: filterExport
             });
             const link = document.createElement('a');
             link.download = `cover-${idea.title.slice(0, 15)}.png`;
             link.href = dataUrl;
+            document.body.appendChild(link);
             link.click();
+            document.body.removeChild(link);
         } catch (err) {
             console.error('Failed to download image', err);
-            alert('Не удалось скачать обложку');
+            alert('Не удалось скачать обложку: ' + (err.message || 'неизвестная ошибка'));
         } finally {
             setIsDownloading(false);
         }
@@ -95,7 +99,7 @@ function IdeaCard({ idea, onClick }) {
                 {/* Download Button (Hover only) */}
                 <button
                     onClick={handleDownload}
-                    className="absolute top-2 left-2 p-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 hover:text-white z-10"
+                    className="hide-on-export absolute top-2 left-2 p-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 hover:text-white z-10"
                     title="Скачать обложку"
                 >
                     <Download size={14} className={isDownloading ? "animate-bounce" : ""} />
