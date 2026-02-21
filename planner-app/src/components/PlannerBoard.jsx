@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../db';
-import { Plus, MoreHorizontal, Calendar, ArrowRight, Mic, Square, Play, Trash2, StopCircle, Sparkles } from 'lucide-react';
+import { Plus, MoreHorizontal, Calendar, ArrowRight, Mic, Square, Play, Trash2, StopCircle, Sparkles, Download } from 'lucide-react';
+import * as htmlToImage from 'html-to-image';
 import { motion } from 'framer-motion';
 
 // Helper for random gradients
@@ -19,7 +20,9 @@ function getRandomGradient() {
 
 function IdeaCard({ idea, onClick }) {
     const [isPlaying, setIsPlaying] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const audioRef = useRef(null);
+    const cardRef = useRef(null);
 
     // Create audio URL if blob exists
     const audioUrl = (idea.audioBlob instanceof Blob) ? URL.createObjectURL(idea.audioBlob) : null;
@@ -43,6 +46,29 @@ function IdeaCard({ idea, onClick }) {
         }
     }, [audioUrl]);
 
+    const handleDownload = async (e) => {
+        e.stopPropagation(); // Prevent opening the modal
+        if (!cardRef.current || isDownloading) return;
+
+        setIsDownloading(true);
+        try {
+            const dataUrl = await htmlToImage.toPng(cardRef.current, {
+                quality: 1.0,
+                pixelRatio: 2, // High resolution for mobile
+                style: { transform: 'scale(1)', margin: 0 } // Ensure it captures correctly without hover scale
+            });
+            const link = document.createElement('a');
+            link.download = `cover-${idea.title.slice(0, 15)}.png`;
+            link.href = dataUrl;
+            link.click();
+        } catch (err) {
+            console.error('Failed to download image', err);
+            alert('Не удалось скачать обложку');
+        } finally {
+            setIsDownloading(false);
+        }
+    };
+
     return (
         <motion.div
             onClick={onClick}
@@ -53,6 +79,7 @@ function IdeaCard({ idea, onClick }) {
         >
             {/* 9:16 Aspect Ratio Cover */}
             <div
+                ref={cardRef}
                 className="w-full aspect-[9/16] bg-cover bg-center relative p-4 flex flex-col items-center justify-center text-center"
                 style={{ background: idea.metadata?.gradient || GRADIENTS[0] }}
             >
@@ -64,6 +91,15 @@ function IdeaCard({ idea, onClick }) {
                 <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/40 backdrop-blur-md text-[9px] font-bold border border-white/10 uppercase tracking-wider text-white/80">
                     {idea.status || 'Draft'}
                 </div>
+
+                {/* Download Button (Hover only) */}
+                <button
+                    onClick={handleDownload}
+                    className="absolute top-2 left-2 p-1.5 rounded-lg bg-black/40 backdrop-blur-md border border-white/10 text-white/80 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/60 hover:text-white z-10"
+                    title="Скачать обложку"
+                >
+                    <Download size={14} className={isDownloading ? "animate-bounce" : ""} />
+                </button>
 
                 {/* Audio Player Overlay */}
                 {audioUrl && (
