@@ -92,7 +92,7 @@ function IdeaCard({ idea, onClick }) {
                 </h3>
 
                 {/* Status Badge */}
-                <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/40 backdrop-blur-md text-[9px] font-bold border border-white/10 uppercase tracking-wider text-white/80">
+                <div className="hide-on-export absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/40 backdrop-blur-md text-[9px] font-bold border border-white/10 uppercase tracking-wider text-white/80">
                     {idea.status || 'Draft'}
                 </div>
 
