@@ -250,13 +250,16 @@ ${data.script_outline}
                 body: JSON.stringify(requestBody)
             });
 
-            if (!response.ok) throw new Error("API Error");
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                throw new Error(errData.detail ? JSON.stringify(errData.detail) : 'API Error');
+            }
 
             onClose();
             // Refresh parent state if needed, but here onClose will trigger it via re-render or explicit callback
         } catch (err) {
             console.error("Save Error:", err);
-            alert("Ошибка сохранения в базу!");
+            alert("Ошибка сохранения в базу! Причина: " + err.message);
         }
     };
 

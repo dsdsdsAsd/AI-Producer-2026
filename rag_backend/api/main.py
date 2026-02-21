@@ -105,10 +105,23 @@ async def login(
 
 # === Board Ideas Endpoints ===
 
+def map_board_idea(idea):
+    return {
+        "id": idea.id,
+        "title": idea.title,
+        "content": idea.content,
+        "status": idea.status,
+        "cover_type": idea.cover_type,
+        "metadata": idea.extra_metadata,
+        "created_at": idea.created_at,
+        "updated_at": idea.updated_at
+    }
+
 @app.get("/planner/ideas", response_model=List[BoardIdeaResponse])
 async def get_ideas(db: Session = Depends(get_db)):
     """Получить все идеи с доски"""
-    return db.query(BoardIdea).order_by(BoardIdea.created_at.desc()).all()
+    ideas = db.query(BoardIdea).order_by(BoardIdea.created_at.desc()).all()
+    return [map_board_idea(idea) for idea in ideas]
 
 @app.post("/planner/ideas", response_model=BoardIdeaResponse)
 async def create_idea(request: IdeaCreate, db: Session = Depends(get_db)):
@@ -123,7 +136,7 @@ async def create_idea(request: IdeaCreate, db: Session = Depends(get_db)):
     db.add(new_idea)
     db.commit()
     db.refresh(new_idea)
-    return new_idea
+    return map_board_idea(new_idea)
 
 @app.patch("/planner/ideas/{idea_id}", response_model=BoardIdeaResponse)
 async def update_idea(idea_id: uuid.UUID, request: IdeaUpdate, db: Session = Depends(get_db)):
@@ -141,7 +154,7 @@ async def update_idea(idea_id: uuid.UUID, request: IdeaUpdate, db: Session = Dep
     
     db.commit()
     db.refresh(idea)
-    return idea
+    return map_board_idea(idea)
 
 @app.delete("/planner/ideas/{idea_id}")
 async def delete_idea(idea_id: uuid.UUID, db: Session = Depends(get_db)):
