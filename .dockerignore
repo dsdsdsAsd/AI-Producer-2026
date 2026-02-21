@@ -1,0 +1,91 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Logs
+logs/
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Data (will be mounted as volume)
+data/documents/*
+!data/documents/.gitkeep
+
+# Backups
+backups/
+
+# Environment
+.env.local
+.env.*.local
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Large files
+*.zip
+*.tar.gz
+*.rar
+
+# Windows
+RAG_LANGCHAIN_DEPLOY.zip
+goodbyedpi-0.2.2/
+Новая папка/
+история для гемини 3.txt
+промпт для кода - claude code.txt
+ВЕСЬ ЛОГ
+
+# Test files
+test_*.py
+*_test.py
+debug_*.py
+check_*.py
+verify_*.py
+audit_*.py

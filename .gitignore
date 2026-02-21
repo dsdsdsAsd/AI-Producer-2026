@@ -1,0 +1,39 @@
+# Игнорируем абсолютно всё по умолчанию
+/*
+
+# Разрешаем только папки и файлы нашего проекта AI Producer
+!/rag_backend/
+!/planner-app/
+!/init_db.py
+!/seed_strategy_complete.py
+!/seed_strategy.py
+!/CORE_STRATEGY_MANIFEST.md
+!/docker-compose.yml
+!/requirements.txt
+!/Dockerfile
+!/.dockerignore
+!/.env.example
+!/README.md
+!/.gitignore
+!/git_helper.py
+
+# Рекурсивно разрешаем содержимое внутри этих папок
+!/rag_backend/**
+!/planner-app/**
+
+# Внутри разрешенных папок игнорируем стандартный мусор
+**/node_modules/
+**/__pycache__/
+**/*.py[cod]
+**/*.log
+**/.env
+**/venv/
+**/.venv/
+**/dist/
+**/build/
+**/.vscode/
+**/.idea/
+**/.DS_Store
+**/Thumbs.db
+**/data/documents/*
+!**/data/documents/.gitkeep
